@@ -8,6 +8,8 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
+// console.log(process.env.EMAIL_HOST_USER, process.env.EMAIL_HOST_PASSWORD)
+
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -21,7 +23,7 @@ app.post('/api/send-email', async (req, res) => {
 
     try {
         await transporter.sendMail({
-            from: 'your-email@gmail.com',
+            from: process.env.EMAIL_HOST_USER,
             to,
             cc,
             bcc,
@@ -30,6 +32,7 @@ app.post('/api/send-email', async (req, res) => {
         });
         res.status(200).send('Email sent');
     } catch (error) {
+        console.log("this is the error", error)
         res.status(500).send('Error sending email');
     }
 });
